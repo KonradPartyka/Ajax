@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kraje</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <div id="head"><h1>Tu możesz wyszukać informacje o każdym Państwie!</h1></div>
+    <div id="znajdz">
+        Wpisz nazwę państwa: <input id="wyszukaj"/>
+        <button>Szukaj</button>
+
+    </div>
+    <div id="main">
+        <div id="left"><ul></ul></div>
+        <div id="mid"><img src="" id="flag"></div>
+        <div id="right"><img scr="" id="herb"></div>
+    </div>
+    <div id="footer">
+        <h2><div id="fleft">Strone stworzył: Konrad Partyka</div>
+        <div id="fright">Link do API: <a href="https://restcountries.com/v3.1/all" target="_blank">https://restcountries.com/v3.1/all</a></div></h2>
+    </div>
+
+
+<script>
+    /* otwórz strone kiedy wszystko się załaduje*/
+   $(document).ready(function(){ 
+    /*tworzenie zmiennych*/
+
+    var Nazwa=""; 
+    var Kontynent="";
+    var Populacja="";
+    var Herb="";
+    var Stolica="";
+    var Flaga=""; 
+
+$("button").click(function(){ /*Przycisk wykonujący skrypt*/
+        fetch("https://restcountries.com/v3.1/all")
+            .then(res => {
+                return res.json();
+            })
+            .then(data => {
+                data.forEach(przypisz => {
+                    /*przypisanie wartości do zmiennych*/
+                    Nazwa = przypisz.name.common; 
+                    Kontynent = przypisz.region;
+                    Populacja = przypisz.population;
+                    Flaga = przypisz.flags.png; 
+                    Herb = przypisz.coatOfArms.png; 
+
+                    /* Sprawdzanie czy kraj jest wyszukiwany przez Nazwe czy Stolice*/
+
+                    if(przypisz.capital){
+                        Stolica = przypisz.capital;
+                    }
+                    else{Stolica = "-";}
+
+                    if($("#wyszukaj").val() == Nazwa || $("#wyszukaj").val() == Stolica){
+                        const wynik =
+                            /* Wyświetlanie informacji */
+                            '<h3><li>Nazwa Kraju: ' + Nazwa + '</li>' +
+                            '<li>Stolica: ' + Stolica + '</li>' +
+                            '<li>Kontynent: ' + Kontynent + '</li>' +
+                            '<li>Populacja: ' + Populacja + ' people' + '</li>';
+                             
+
+                        document.querySelector('ul').innerHTML = wynik; /* przypisanie do elementu <ul></ul> tekstu z linijek 66-69 */
+                        document.querySelector("#flag").src = Flaga; /* przypasanie do znacznika img o id #flag probranego zdjęcia */
+                        document.querySelector("#herb").src = Herb; /* przypasanie do znacznika img o id #herb probranego zdjęcia */
+                    }
+                })
+            })
+    })
+   })
+</script>
+
+
+    <style>
+        #head, #znajdz{
+            text-align: center;
+            height: 20%;
+        }
+        #head{
+            background-color: green;
+            color: white;
+            
+        }
+        #left{
+            width: 40%;
+            float: left;
+        }
+        #mid,#right{
+            float: left;
+            width: 30%;
+        }
+        #flag, #herb{
+            width: 50%;
+            height: 50%;
+        }
+        #mid{
+            padding-top: 250px;
+        }
+        #right{
+            padding-top: 200px;
+        }
+        #main{
+            height: 686px;
+        }
+        #fleft, #fright{
+            float: left;
+            background-color: green;
+            width: 50%;
+            color: white;
+            text-align: center;
+        }
+        #left{
+            padding-left: 100px;
+            padding-top: 275px;
+        }
+
+    </style>
+    
+</body>
+</html>
